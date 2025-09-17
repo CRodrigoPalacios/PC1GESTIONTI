@@ -11,6 +11,7 @@ const placeholders = {
   solution: "Describe las soluciones que ofreces para resolver los problemas identificados...",
   keyMetrics: "Define las métricas clave que usarás para medir el éxito...",
   uniqueValueProposition: "Describe qué valor único ofreces a tus clientes...",
+  unfairAdvantage: "Identifica qué ventaja competitiva tienes que no puede ser fácilmente copiada...",
   channels: "Describe cómo tu empresa se comunica y llega a sus clientes...",
   customerSegments: "Identifica los diferentes grupos de clientes objetivo...",
   costStructure: "Describe todos los costos involucrados en tu modelo de negocio...",
@@ -22,6 +23,7 @@ const labels: Record<keyof typeof placeholders, string> = {
   solution: "Solución", 
   keyMetrics: "Métricas Clave",
   uniqueValueProposition: "Propuesta de Valor Única",
+  unfairAdvantage: "Ventaja Competitiva",
   channels: "Canales",
   customerSegments: "Segmentos de Clientes",
   costStructure: "Estructura de Costos",
@@ -37,6 +39,7 @@ type LeanItem = {
   solution: string;
   keyMetrics: string;
   uniqueValueProposition: string;
+  unfairAdvantage: string;
   channels: string;
   customerSegments: string;
   costStructure: string;
@@ -84,6 +87,7 @@ export default function LeanCanvasPage() {
       solution: item.solution || "",
       keyMetrics: item.keyMetrics || "",
       uniqueValueProposition: item.uniqueValueProposition || "",
+      unfairAdvantage: item.unfairAdvantage || "",
       channels: item.channels || "",
       customerSegments: item.customerSegments || "",
       costStructure: item.costStructure || "",
@@ -229,6 +233,14 @@ export default function LeanCanvasPage() {
                   {formData.uniqueValueProposition ? 
                     <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.uniqueValueProposition)} /> : 
                     <div>{placeholders.uniqueValueProposition}</div>}
+                </div>
+              </div>
+              <div className="canvas-box unfairAdvantage">
+                <div className="box-title">{labels.unfairAdvantage}</div>
+                <div className="box-content">
+                  {formData.unfairAdvantage ? 
+                    <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.unfairAdvantage)} /> : 
+                    <div>{placeholders.unfairAdvantage}</div>}
                 </div>
               </div>
 
