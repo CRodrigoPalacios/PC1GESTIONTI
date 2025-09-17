@@ -73,7 +73,7 @@ export default function LeanCanvasPage() {
       recursos: item.customerSegments,
       costos: item.costStructure,
       ingresos: item.revenueStreams,
-      canales: "", // ya lo tenemos como segmento arriba
+      canales: "", // campo libre
     } as CanvasData);
   };
 
@@ -181,11 +181,13 @@ export default function LeanCanvasPage() {
             <div className="canvas-grid">
               {(Object.keys(placeholders) as (keyof typeof placeholders)[]).map((field) => (
                 <div className={`canvas-box ${field}`} key={field}>
-                  <div className="box-title">
-                    {placeholders[field]}
-                  </div>
+                  <div className="box-title">{placeholders[field]}</div>
                   <div className="box-content">
-                    {formData[field] || placeholders[field]}
+                    {(formData[field] || placeholders[field])
+                      .split("\n")
+                      .map((line, idx) => (
+                        <p key={idx}>{line}</p>
+                      ))}
                   </div>
                 </div>
               ))}

@@ -1,103 +1,110 @@
 body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
-        }
-        
-        .canvas-container {
-            background: white;
-            border: 3px solid #ff6b35;
-            border-radius: 8px;
-            margin: 20px auto;
-            max-width: 1200px;
-            padding: 20px;
-        }
-        
-        .canvas-title {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #333;
-            font-weight: bold;
-        }
-        
-        .canvas-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-            grid-template-rows: auto auto auto;
-            gap: 2px;
-            height: 500px;
-        }
-        
-        .canvas-box {
-            background: white;
-            border: 2px solid #ff6b35;
-            padding: 15px;
-            position: relative;
-            overflow-y: auto;
-        }
-        
-        .box-title {
-            font-weight: bold;
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .box-content {
-            font-size: 12px;
-            color: #666;
-            min-height: 60px;
-            word-wrap: break-word;
-        }
-        
-        /* Grid positioning */
-        .aliados { grid-column: 1; grid-row: 1; }
-        .actividades { grid-column: 2; grid-row: 1; }
-        .propuesta { grid-column: 3; grid-row: 1; }
-        .relacion { grid-column: 4; grid-row: 1; }
-        .segmento { grid-column: 5; grid-row: 1; }
-        
-        .recursos { grid-column: 2; grid-row: 2; }
-        .canales { grid-column: 4; grid-row: 2; }
-        
-        .costos { grid-column: 1/4; grid-row: 3; }
-        .ingresos { grid-column: 4/6; grid-row: 3; }
-        
-        .form-container {
-            max-width: 800px;
-            margin: 30px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .btn-download {
-            background-color: #ff6b35;
-            border-color: #ff6b35;
-            color: white;
-            font-weight: bold;
-        }
-        
-        .btn-download:hover {
-            background-color: #e55a2b;
-            border-color: #e55a2b;
-            color: white;
-        }
-        
-        .icon {
-            font-size: 18px;
-        }
-        
-        @media (max-width: 768px) {
-            .canvas-grid {
-                grid-template-columns: 1fr;
-                height: auto;
-            }
-            
-            .costos, .ingresos {
-                grid-column: 1;
-            }
-        }
+  background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+}
+
+.canvas-container {
+  background: white;
+  border: 3px solid #ff6b35;
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 1200px;
+  padding: 20px;
+}
+
+.canvas-title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+  font-weight: bold;
+}
+
+.canvas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 2px;
+  height: 500px;
+}
+
+.canvas-box {
+  background: white;
+  border: 2px solid #ff6b35;
+  padding: 15px;
+  position: relative;
+  overflow-y: auto;
+}
+
+.box-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.box-content {
+  font-size: 12px;
+  color: #666;
+  min-height: 60px;
+  word-wrap: break-word;
+  white-space: pre-wrap;   /* ✅ respeta saltos de línea */
+  overflow-wrap: break-word;
+  line-height: 1.4;
+}
+
+.box-content p {
+  margin: 0 0 5px 0;
+}
+
+/* Grid positioning */
+.aliados { grid-column: 1; grid-row: 1; }
+.actividades { grid-column: 2; grid-row: 1; }
+.propuesta { grid-column: 3; grid-row: 1; }
+.relacion { grid-column: 4; grid-row: 1; }
+.segmento { grid-column: 5; grid-row: 1; }
+
+.recursos { grid-column: 2; grid-row: 2; }
+.canales { grid-column: 4; grid-row: 2; }
+
+.costos { grid-column: 1/4; grid-row: 3; }
+.ingresos { grid-column: 4/6; grid-row: 3; }
+
+.form-container {
+  max-width: 800px;
+  margin: 30px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.btn-download {
+  background-color: #ff6b35;
+  border-color: #ff6b35;
+  color: white;
+  font-weight: bold;
+}
+
+.btn-download:hover {
+  background-color: #e55a2b;
+  border-color: #e55a2b;
+  color: white;
+}
+
+.icon {
+  font-size: 18px;
+}
+
+@media (max-width: 768px) {
+  .canvas-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .costos, .ingresos {
+    grid-column: 1;
+  }
+}
