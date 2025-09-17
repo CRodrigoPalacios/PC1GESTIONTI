@@ -207,7 +207,7 @@ export default function LeanCanvasPage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Ponle un título a tu Canvas"
-                />
+                required/>
               </div>
               <div className="row">
                 {(Object.keys(placeholders) as (keyof typeof placeholders)[]).map((field) => (

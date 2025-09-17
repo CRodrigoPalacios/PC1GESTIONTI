@@ -34,6 +34,16 @@ type PorterItem = {
   competitiveRivalry: string;
 };
 
+// Función auxiliar para convertir saltos de línea en <br>
+const formatTextWithLineBreaks = (text: string) => {
+  return text.split('\n').map((line, index) => (
+    <span key={index}>
+      {line}
+      {index < text.split('\n').length - 1 && <br />}
+    </span>
+  ));
+};
+
 export default function PorterPage() {
   // 📝 datos del formulario
   const [title, setTitle] = useState("");
@@ -171,7 +181,9 @@ export default function PorterPage() {
                 <div className="force-box amenaza-nuevos">
                   <div className="force-title">AMENAZA DE NUEVOS ENTRANTES</div>
                   <div className="force-content">
-                    {formData.threatNewEntrants || placeholders.threatNewEntrants}
+                    {formData.threatNewEntrants ? 
+                      formatTextWithLineBreaks(formData.threatNewEntrants) : 
+                      placeholders.threatNewEntrants}
                   </div>
                 </div>
               </div>
@@ -183,7 +195,9 @@ export default function PorterPage() {
                 <div className="force-box poder-proveedores side-box">
                   <div className="force-title">PODER DE NEGOCIACIÓN DE PROVEEDORES</div>
                   <div className="force-content">
-                    {formData.bargainingSuppliers || placeholders.bargainingSuppliers}
+                    {formData.bargainingSuppliers ? 
+                      formatTextWithLineBreaks(formData.bargainingSuppliers) : 
+                      placeholders.bargainingSuppliers}
                   </div>
                 </div>
                 <div className="arrow-horizontal">
@@ -192,7 +206,9 @@ export default function PorterPage() {
                 <div className="force-box rivalidad center-box">
                   <div className="force-title">RIVALIDAD ENTRE COMPETIDORES</div>
                   <div className="force-content">
-                    {formData.competitiveRivalry || placeholders.competitiveRivalry}
+                    {formData.competitiveRivalry ? 
+                      formatTextWithLineBreaks(formData.competitiveRivalry) : 
+                      placeholders.competitiveRivalry}
                   </div>
                 </div>
                 <div className="arrow-horizontal">
@@ -201,7 +217,9 @@ export default function PorterPage() {
                 <div className="force-box poder-clientes side-box">
                   <div className="force-title">PODER DE NEGOCIACIÓN DE CLIENTES</div>
                   <div className="force-content">
-                    {formData.bargainingCustomers || placeholders.bargainingCustomers}
+                    {formData.bargainingCustomers ? 
+                      formatTextWithLineBreaks(formData.bargainingCustomers) : 
+                      placeholders.bargainingCustomers}
                   </div>
                 </div>
               </div>
@@ -213,7 +231,9 @@ export default function PorterPage() {
                 <div className="force-box amenaza-sustitutos">
                   <div className="force-title">AMENAZA DE PRODUCTOS SUSTITUTOS</div>
                   <div className="force-content">
-                    {formData.threatSubstitutes || placeholders.threatSubstitutes}
+                    {formData.threatSubstitutes ? 
+                      formatTextWithLineBreaks(formData.threatSubstitutes) : 
+                      placeholders.threatSubstitutes}
                   </div>
                 </div>
               </div>
