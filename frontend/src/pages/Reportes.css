@@ -1,0 +1,103 @@
+/* Contenedor principal */
+.report-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Título principal */
+.report-title {
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+/* Secciones */
+.report-section {
+  margin-bottom: 2.5rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.report-section h3 {
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-bottom: 1rem;
+  border-left: 5px solid #007bff;
+  padding-left: 0.5rem;
+}
+
+/* Tablas */
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.report-table th,
+.report-table td {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.report-table th {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: 600;
+}
+
+.report-table tbody tr:nth-child(even) {
+  background-color: #f1f7ff;
+}
+
+.report-table tbody tr:hover {
+  background-color: #e7f1ff;
+  transition: background 0.2s ease;
+}
+
+/* Leyenda */
+.report-legend {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #eaf5ff;
+  border-left: 5px solid #007bff;
+  border-radius: 8px;
+}
+
+.report-legend strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.report-legend ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: #555;
+}
+
+/* Para el contenedor de gráficas */
+.report-chart {
+  width: 100%;
+  height: 300px;
+  margin: 1.5rem 0;
+}
+
+/* Conclusiones */
+.report-conclusions {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #fff8e1;
+  border-left: 5px solid #ffc107;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #5c4400;
+}

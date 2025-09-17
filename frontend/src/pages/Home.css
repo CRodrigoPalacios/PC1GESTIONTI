@@ -1,0 +1,84 @@
+/* src/pages/HomePage.css */
+.home-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  width: 90%; /* Ajusta para ocupar más pantalla */
+  margin: 0 auto; /* Centrado */
+}
+
+.intro-card {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  color: #004d40;
+  margin-bottom: 1rem;
+}
+
+.description {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.intro-card a {
+  color: #004d40;
+  font-weight: 600;
+  text-decoration: none;
+}
+.intro-card a:hover {
+  text-decoration: underline;
+}
+
+.buttons {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.btn-action {
+  background-color: #004d40;
+  color: #fff !important; /* Fuerza el color blanco */
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  border: none;
+  display: inline-block;
+  cursor: pointer;
+  line-height: 1.5; /* Asegura alineación del texto */
+  white-space: normal; /* Permite ajuste del texto */
+  min-width: 100px; /* Mínimo ancho para evitar colapso */
+  overflow: visible; /* Asegura que el texto no se corte */
+}
+.btn-action:hover {
+  background-color: #00695c;
+}
+
+.team-card {
+  background-color: #e8f5e9;
+  padding: 1rem;
+  border-radius: 6px;
+}
+.team-card h3 {
+  color: #004d40;
+  margin-bottom: 0.5rem;
+}
+.team-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.team-card li {
+  margin-bottom: 0.3rem;
+  color: #333;
+}
