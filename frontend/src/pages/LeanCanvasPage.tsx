@@ -7,15 +7,27 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./LeanCanvas.css";
 
 const placeholders = {
-  aliados: "Escribe aquí los aliados y socios estratégicos clave...",
-  actividades: "Define las actividades más importantes...",
-  propuesta: "Describe qué valor único ofreces a tus clientes...",
-  relacion: "Explica qué tipo de relación estableces...",
-  segmento: "Identifica los diferentes grupos...",
-  recursos: "Lista los recursos más importantes...",
-  canales: "Describe cómo tu empresa se comunica...",
-  costos: "Describe todos los costos involucrados...",
-  ingresos: "Representa el dinero que se genera...",
+  problem: "Identifica los problemas principales que experimenta tu segmento de clientes...",
+  solution: "Describe las soluciones que ofreces para resolver los problemas identificados...",
+  keyMetrics: "Define las métricas clave que usarás para medir el éxito...",
+  uniqueValueProposition: "Describe qué valor único ofreces a tus clientes...",
+  unfairAdvantage: "Identifica qué ventaja competitiva tienes que no puede ser fácilmente copiada...",
+  channels: "Describe cómo tu empresa se comunica y llega a sus clientes...",
+  customerSegments: "Identifica los diferentes grupos de clientes objetivo...",
+  costStructure: "Describe todos los costos involucrados en tu modelo de negocio...",
+  revenueStreams: "Representa las diferentes formas en que generas ingresos...",
+};
+
+const labels: Record<keyof typeof placeholders, string> = {
+  problem: "Problema",
+  solution: "Solución", 
+  keyMetrics: "Métricas Clave",
+  uniqueValueProposition: "Propuesta de Valor Única",
+  unfairAdvantage: "Ventaja Competitiva",
+  channels: "Canales",
+  customerSegments: "Segmentos de Clientes",
+  costStructure: "Estructura de Costos",
+  revenueStreams: "Flujos de Ingresos",
 };
 
 type CanvasData = Record<keyof typeof placeholders, string>;
@@ -27,10 +39,21 @@ type LeanItem = {
   solution: string;
   keyMetrics: string;
   uniqueValueProposition: string;
+  unfairAdvantage: string;
   channels: string;
   customerSegments: string;
   costStructure: string;
   revenueStreams: string;
+};
+
+// Función auxiliar para convertir saltos de línea en <br>
+const formatTextWithLineBreaks = (text: string) => {
+  return text.split('\n').map((line, index) => (
+    <span key={index}>
+      {line}
+      {index < text.split('\n').length - 1 && <br />}
+    </span>
+  ));
 };
 
 export default function LeanCanvasPage() {
@@ -65,16 +88,16 @@ export default function LeanCanvasPage() {
     setSelectedId(item._id);
     setTitle(item.title);
     setFormData({
-      aliados: item.problem,
-      actividades: item.solution,
-      propuesta: item.keyMetrics,
-      relacion: item.uniqueValueProposition,
-      segmento: item.channels,
-      recursos: item.customerSegments,
-      costos: item.costStructure,
-      ingresos: item.revenueStreams,
-      canales: "", // ya lo tenemos como segmento arriba
-    } as CanvasData);
+      problem: item.problem || "",
+      solution: item.solution || "",
+      keyMetrics: item.keyMetrics || "",
+      uniqueValueProposition: item.uniqueValueProposition || "",
+      unfairAdvantage: item.unfairAdvantage || "",
+      channels: item.channels || "",
+      customerSegments: item.customerSegments || "",
+      costStructure: item.costStructure || "",
+      revenueStreams: item.revenueStreams || "",
+    });
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -82,14 +105,7 @@ export default function LeanCanvasPage() {
 
     const transformedData = {
       title,
-      problem: formData.aliados,
-      solution: formData.actividades,
-      keyMetrics: formData.propuesta,
-      uniqueValueProposition: formData.relacion,
-      channels: formData.segmento,
-      customerSegments: formData.recursos,
-      costStructure: formData.costos,
-      revenueStreams: formData.ingresos,
+      ...formData,
     };
 
     try {
@@ -126,11 +142,24 @@ export default function LeanCanvasPage() {
   const downloadCanvas = () => {
     const canvasElement = document.getElementById("canvas");
     if (!canvasElement) return;
-    html2canvas(canvasElement, { scale: 2, backgroundColor: "#ffffff" })
+    
+    html2canvas(canvasElement, { 
+      scale: 2, 
+      backgroundColor: "#ffffff",
+      useCORS: true,
+      allowTaint: false,
+      foreignObjectRendering: true,
+      letterRendering: true,
+      logging: false,
+      width: canvasElement.scrollWidth,
+      height: canvasElement.scrollHeight,
+      scrollX: 0,
+      scrollY: 0
+    })
       .then((canvas) => {
         const link = document.createElement("a");
         link.download = `lean-canvas-${new Date().toISOString().split("T")[0]}.png`;
-        link.href = canvas.toDataURL();
+        link.href = canvas.toDataURL("image/png", 1.0);
         link.click();
       })
       .catch((error) => {
@@ -179,16 +208,83 @@ export default function LeanCanvasPage() {
             <h2 className="canvas-title">{title || "Nuevo Lean Canvas"}</h2>
 
             <div className="canvas-grid">
-              {(Object.keys(placeholders) as (keyof typeof placeholders)[]).map((field) => (
-                <div className={`canvas-box ${field}`} key={field}>
-                  <div className="box-title">
-                    {placeholders[field]}
-                  </div>
-                  <div className="box-content">
-                    {formData[field] || placeholders[field]}
-                  </div>
+              {/* Fila 1 */}
+              <div className="canvas-box problem">
+                <div className="box-title">{labels.problem}</div>
+                <div className="box-content">
+                  {formData.problem ? 
+                    formatTextWithLineBreaks(formData.problem) : 
+                    placeholders.problem}
                 </div>
-              ))}
+              </div>
+              <div className="canvas-box solution">
+                <div className="box-title">{labels.solution}</div>
+                <div className="box-content">
+                  {formData.solution ? 
+                    formatTextWithLineBreaks(formData.solution) : 
+                    placeholders.solution}
+                </div>
+              </div>
+              <div className="canvas-box keyMetrics">
+                <div className="box-title">{labels.keyMetrics}</div>
+                <div className="box-content">
+                  {formData.keyMetrics ? 
+                    formatTextWithLineBreaks(formData.keyMetrics) : 
+                    placeholders.keyMetrics}
+                </div>
+              </div>
+              <div className="canvas-box uniqueValueProposition">
+                <div className="box-title">{labels.uniqueValueProposition}</div>
+                <div className="box-content">
+                  {formData.uniqueValueProposition ? 
+                    formatTextWithLineBreaks(formData.uniqueValueProposition) : 
+                    placeholders.uniqueValueProposition}
+                </div>
+              </div>
+              <div className="canvas-box unfairAdvantage">
+                <div className="box-title">{labels.unfairAdvantage}</div>
+                <div className="box-content">
+                  {formData.unfairAdvantage ? 
+                    formatTextWithLineBreaks(formData.unfairAdvantage) : 
+                    placeholders.unfairAdvantage}
+                </div>
+              </div>
+
+              {/* Fila 2 */}
+              <div className="canvas-box channels">
+                <div className="box-title">{labels.channels}</div>
+                <div className="box-content">
+                  {formData.channels ? 
+                    formatTextWithLineBreaks(formData.channels) : 
+                    placeholders.channels}
+                </div>
+              </div>
+              <div className="canvas-box customerSegments">
+                <div className="box-title">{labels.customerSegments}</div>
+                <div className="box-content">
+                  {formData.customerSegments ? 
+                    formatTextWithLineBreaks(formData.customerSegments) : 
+                    placeholders.customerSegments}
+                </div>
+              </div>
+
+              {/* Fila 3 */}
+              <div className="canvas-box costStructure">
+                <div className="box-title">{labels.costStructure}</div>
+                <div className="box-content">
+                  {formData.costStructure ? 
+                    formatTextWithLineBreaks(formData.costStructure) : 
+                    placeholders.costStructure}
+                </div>
+              </div>
+              <div className="canvas-box revenueStreams">
+                <div className="box-title">{labels.revenueStreams}</div>
+                <div className="box-content">
+                  {formData.revenueStreams ? 
+                    formatTextWithLineBreaks(formData.revenueStreams) : 
+                    placeholders.revenueStreams}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -207,13 +303,14 @@ export default function LeanCanvasPage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Ponle un título a tu Canvas"
-                required/>
+                  required
+                />
               </div>
               <div className="row">
                 {(Object.keys(placeholders) as (keyof typeof placeholders)[]).map((field) => (
                   <div className="col-md-6 mb-3" key={field}>
                     <label htmlFor={field} className="form-label">
-                      {field.charAt(0).toUpperCase() + field.slice(1)}
+                      {labels[field]}
                     </label>
                     <textarea
                       className="form-control"
