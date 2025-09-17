@@ -8,15 +8,37 @@ import porterRoutes from "./routes/porter.routes.js";
 dotenv.config();
 const app = express();
 
-app.use(cors());
+// ✅ Configuración de CORS
+const allowedOrigins = [
+  "http://localhost:5173", // Vite en desarrollo
+  "http://localhost:3000", // CRA en desarrollo
+  "https://pc-1-gestionti.vercel.app" // Frontend en producción (Vercel)
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Permitir sin origin (Postman, curl) o si está en la lista
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+  })
+);
+
 app.use(express.json());
 
-// conectar BD
+// 🔗 Conectar BD
 connectDB();
 
-// rutas
+// 📌 Rutas
 app.use("/api/leancanvas", leanCanvasRoutes);
 app.use("/api/porter", porterRoutes);
 
+// 🌍 Servidor
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`🚀 Backend corriendo en puerto ${PORT}`));
