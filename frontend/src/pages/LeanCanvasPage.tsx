@@ -1,5 +1,4 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
-import React from "react";
 import html2canvas from "html2canvas";
 import api from "../api/api";
 
@@ -145,7 +144,6 @@ export default function LeanCanvasPage() {
       useCORS: true,
       allowTaint: false,
       foreignObjectRendering: true,
-      letterRendering: true,
       logging: false,
       width: canvasElement.scrollWidth,
       height: canvasElement.scrollHeight,
@@ -210,7 +208,7 @@ export default function LeanCanvasPage() {
                 <div className="box-content">
                   {formData.problem ? 
                     <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.problem)} /> : 
-                    placeholders.problem}
+                    <div>{placeholders.problem}</div>}
                 </div>
               </div>
               <div className="canvas-box solution">
@@ -218,7 +216,7 @@ export default function LeanCanvasPage() {
                 <div className="box-content">
                   {formData.solution ? 
                     <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.solution)} /> : 
-                    placeholders.solution}
+                    <div>{placeholders.solution}</div>}
                 </div>
               </div>
               <div className="canvas-box keyMetrics">
@@ -226,23 +224,23 @@ export default function LeanCanvasPage() {
                 <div className="box-content">
                   {formData.keyMetrics ? 
                     <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.keyMetrics)} /> : 
-                    placeholders.keyMetrics}
+                    <div>{placeholders.keyMetrics}</div>}
                 </div>
               </div>
               <div className="canvas-box uniqueValueProposition">
                 <div className="box-title">{labels.uniqueValueProposition}</div>
                 <div className="box-content">
                   {formData.uniqueValueProposition ? 
-                    formatTextWithLineBreaks(formData.uniqueValueProposition) : 
-                    placeholders.uniqueValueProposition}
+                    <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.uniqueValueProposition)} /> : 
+                    <div>{placeholders.uniqueValueProposition}</div>}
                 </div>
               </div>
               <div className="canvas-box unfairAdvantage">
                 <div className="box-title">{labels.unfairAdvantage}</div>
                 <div className="box-content">
                   {formData.unfairAdvantage ? 
-                    formatTextWithLineBreaks(formData.unfairAdvantage) : 
-                    placeholders.unfairAdvantage}
+                    <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.unfairAdvantage)} /> : 
+                    <div>{placeholders.unfairAdvantage}</div>}
                 </div>
               </div>
 
@@ -251,16 +249,16 @@ export default function LeanCanvasPage() {
                 <div className="box-title">{labels.channels}</div>
                 <div className="box-content">
                   {formData.channels ? 
-                    formatTextWithLineBreaks(formData.channels) : 
-                    placeholders.channels}
+                    <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.channels)} /> : 
+                    <div>{placeholders.channels}</div>}
                 </div>
               </div>
               <div className="canvas-box customerSegments">
                 <div className="box-title">{labels.customerSegments}</div>
                 <div className="box-content">
                   {formData.customerSegments ? 
-                    formatTextWithLineBreaks(formData.customerSegments) : 
-                    placeholders.customerSegments}
+                    <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.customerSegments)} /> : 
+                    <div>{placeholders.customerSegments}</div>}
                 </div>
               </div>
 
@@ -269,16 +267,16 @@ export default function LeanCanvasPage() {
                 <div className="box-title">{labels.costStructure}</div>
                 <div className="box-content">
                   {formData.costStructure ? 
-                    formatTextWithLineBreaks(formData.costStructure) : 
-                    placeholders.costStructure}
+                    <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.costStructure)} /> : 
+                    <div>{placeholders.costStructure}</div>}
                 </div>
               </div>
               <div className="canvas-box revenueStreams">
                 <div className="box-title">{labels.revenueStreams}</div>
                 <div className="box-content">
                   {formData.revenueStreams ? 
-                    formatTextWithLineBreaks(formData.revenueStreams) : 
-                    placeholders.revenueStreams}
+                    <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.revenueStreams)} /> : 
+                    <div>{placeholders.revenueStreams}</div>}
                 </div>
               </div>
             </div>
