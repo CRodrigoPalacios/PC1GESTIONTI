@@ -1,4 +1,5 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import React from "react";
 import html2canvas from "html2canvas";
 import api from "../api/api";
 
@@ -48,12 +49,7 @@ type LeanItem = {
 
 // Función auxiliar para convertir saltos de línea en <br>
 const formatTextWithLineBreaks = (text: string) => {
-  return text.split('\n').map((line, index) => (
-    <span key={index}>
-      {line}
-      {index < text.split('\n').length - 1 && <br />}
-    </span>
-  ));
+  return { __html: text.replace(/\n/g, '<br>') };
 };
 
 export default function LeanCanvasPage() {
@@ -213,7 +209,7 @@ export default function LeanCanvasPage() {
                 <div className="box-title">{labels.problem}</div>
                 <div className="box-content">
                   {formData.problem ? 
-                    formatTextWithLineBreaks(formData.problem) : 
+                    <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.problem)} /> : 
                     placeholders.problem}
                 </div>
               </div>
@@ -221,7 +217,7 @@ export default function LeanCanvasPage() {
                 <div className="box-title">{labels.solution}</div>
                 <div className="box-content">
                   {formData.solution ? 
-                    formatTextWithLineBreaks(formData.solution) : 
+                    <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.solution)} /> : 
                     placeholders.solution}
                 </div>
               </div>
@@ -229,7 +225,7 @@ export default function LeanCanvasPage() {
                 <div className="box-title">{labels.keyMetrics}</div>
                 <div className="box-content">
                   {formData.keyMetrics ? 
-                    formatTextWithLineBreaks(formData.keyMetrics) : 
+                    <div dangerouslySetInnerHTML={formatTextWithLineBreaks(formData.keyMetrics)} /> : 
                     placeholders.keyMetrics}
                 </div>
               </div>
