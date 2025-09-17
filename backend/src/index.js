@@ -12,7 +12,8 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173", // Vite en desarrollo
   "http://localhost:3000", // CRA en desarrollo
-  "https://pc-1-gestionti.vercel.app" // Frontend en producción (Vercel)
+  "https://pc-1-gestionti.vercel.app", // Frontend en producción (Vercel)
+  "https://pc-1-gestionti.vercel.app/"
 ];
 
 app.use(
