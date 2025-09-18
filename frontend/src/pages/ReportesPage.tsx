@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   BarChart,
   Bar,
@@ -9,11 +9,12 @@ import {
   CartesianGrid,
 } from "recharts";
 import api from "../api/api";
-import { scoreByLength, normalizeTo100 } from "../utils/scoring";
+import { scoreByLength, normalizeTo100 } from "../utils/scoring"; // <-- usa tu scoring
 import "./Reportes.css";
 
 type LeanCanvasItem = {
   _id: string;
+  title?: string;
   problem: string;
   solution: string;
   keyMetrics: string;
@@ -27,6 +28,7 @@ type LeanCanvasItem = {
 
 type PorterItem = {
   _id: string;
+  title?: string;
   threatNewEntrants: string;
   bargainingSuppliers: string;
   bargainingCustomers: string;
@@ -38,222 +40,148 @@ type PorterItem = {
 export default function ReportesPage() {
   const [leanList, setLeanList] = useState<LeanCanvasItem[]>([]);
   const [porterList, setPorterList] = useState<PorterItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedLean, setSelectedLean] = useState("");
+  const [selectedPorter, setSelectedPorter] = useState("");
 
   useEffect(() => {
-    const fetchAll = async () => {
+    (async () => {
       try {
         const [lres, pres] = await Promise.all([
           api.get("/leancanvas"),
           api.get("/porter"),
         ]);
-
-        // LeanCanvas ya es array
-        const leanData = Array.isArray(lres.data) ? lres.data : [];
-
-        // Porter: si es objeto, lo metemos en array
-        const porterData = Array.isArray(pres.data)
-          ? pres.data
-          : pres.data
-          ? [pres.data]
-          : [];
-
-        setLeanList(leanData);
-        setPorterList(porterData);
+        setLeanList(Array.isArray(lres.data) ? lres.data : []);
+        setPorterList(Array.isArray(pres.data) ? pres.data : []);
       } catch (err) {
-        console.error("Error cargando reportes:", err);
+        console.error(err);
         alert("Error cargando datos del servidor");
-        setLeanList([]);
-        setPorterList([]);
-      } finally {
-        setLoading(false);
       }
-    };
-
-    fetchAll();
+    })();
   }, []);
 
-  const computeLeanScore = (item: LeanCanvasItem) => {
-    const fields = [
-      item.problem,
-      item.solution,
-      item.keyMetrics,
-      item.uniqueValueProposition,
-      item.channels,
-      item.customerSegments,
-      item.costStructure,
-      item.revenueStreams,
-    ];
-    const scores = fields.map(scoreByLength);
-    const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
-    return { scores, percent: normalizeTo100(avg, 5) };
-  };
+  // ---- cálculo ITIL ----
+  const getLeanAnalysis = (item: LeanCanvasItem) => [
+    { name: "Problema", value: scoreByLength(item.problem) },
+    { name: "Segmento Clientes", value: scoreByLength(item.customerSegments) },
+    { name: "Propuesta Valor", value: scoreByLength(item.uniqueValueProposition) },
+    { name: "Solución", value: scoreByLength(item.solution) },
+    { name: "Canales", value: scoreByLength(item.channels) },
+    { name: "Flujos Ingresos", value: scoreByLength(item.revenueStreams) },
+    { name: "Estructura Costos", value: scoreByLength(item.costStructure) },
+    { name: "Métricas Clave", value: scoreByLength(item.keyMetrics) },
+  ];
 
-  const computePorterScore = (item: PorterItem) => {
-    const fields = [
-      item.threatNewEntrants,
-      item.bargainingSuppliers,
-      item.bargainingCustomers,
-      item.threatSubstitutes,
-      item.competitiveRivalry,
-    ];
-    const scores = fields.map(scoreByLength);
-    const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
-    return { scores, percent: normalizeTo100(avg, 5) };
-  };
+  const getPorterAnalysis = (item: PorterItem) => [
+    { name: "Nuevos Competidores", value: scoreByLength(item.threatNewEntrants) },
+    { name: "Proveedores", value: scoreByLength(item.bargainingSuppliers) },
+    { name: "Compradores", value: scoreByLength(item.bargainingCustomers) },
+    { name: "Sustitutos", value: scoreByLength(item.threatSubstitutes) },
+    { name: "Rivalidad", value: scoreByLength(item.competitiveRivalry) },
+  ];
 
-  if (loading) return <div className="report-container">Cargando reportes...</div>;
+  const currentLean = leanList.find((l) => l._id === selectedLean);
+  const currentPorter = porterList.find((p) => p._id === selectedPorter);
 
-  // Datos para gráficas
-  const leanChartData = leanList.map((item) => {
-    const { percent } = computeLeanScore(item);
-    return {
-      fecha: item.createdAt ? new Date(item.createdAt).toLocaleDateString() : "N/A",
-      porcentaje: percent,
-    };
-  });
+  // promedio & conclusiones
+  const leanConclusion = useMemo(() => {
+    if (!currentLean) return "";
+    const values = getLeanAnalysis(currentLean).map((d) => d.value);
+    const avg = values.reduce((a, b) => a + b, 0) / values.length;
+    const pct = normalizeTo100(avg);
+    if (pct > 80)
+      return `El Lean Canvas está muy completo. Desde ITIL, existe un alto grado de madurez en la definición de valor, riesgo y capacidades.`;
+    if (pct > 50)
+      return `El Lean Canvas es aceptable. Desde ITIL, hay margen para mejorar en gestión de riesgos, valor y métricas clave.`;
+    return `El Lean Canvas es insuficiente. Desde ITIL, se recomienda clarificar el valor al cliente y establecer métricas y riesgos más detallados.`;
+  }, [currentLean]);
 
-  const porterChartData = porterList.map((item) => {
-    const { percent } = computePorterScore(item);
-    return {
-      fecha: item.createdAt ? new Date(item.createdAt).toLocaleDateString() : "N/A",
-      porcentaje: percent,
-    };
-  });
-
-  // Conclusión simple
-  const promedioLean =
-    leanChartData.reduce((a, b) => a + b.porcentaje, 0) / (leanChartData.length || 1);
-  const promedioPorter =
-    porterChartData.reduce((a, b) => a + b.porcentaje, 0) /
-    (porterChartData.length || 1);
+  const porterConclusion = useMemo(() => {
+    if (!currentPorter) return "";
+    const values = getPorterAnalysis(currentPorter).map((d) => d.value);
+    const avg = values.reduce((a, b) => a + b, 0) / values.length;
+    const pct = normalizeTo100(avg);
+    if (pct > 80)
+      return `El análisis de Porter es muy sólido. Desde ITIL, la comprensión del entorno y gestión de riesgos es robusta.`;
+    if (pct > 50)
+      return `El análisis de Porter es moderado. Desde ITIL, se identifican riesgos pero aún pueden priorizarse acciones.`;
+    return `El análisis de Porter es débil. Desde ITIL, se recomienda profundizar en riesgos, proveedores y competidores.`;
+  }, [currentPorter]);
 
   return (
     <div className="report-container">
-      <h2 className="report-title">📊 Reportes Cuantificados (Producción y Logística)</h2>
+      <h2 className="report-title">📊 Análisis ITIL de Lean Canvas y 5 Fuerzas de Porter</h2>
 
-      {/* Lean Canvas */}
+      {/* Selector Lean */}
       <section className="report-section">
-        <h3>Lean Canvas</h3>
-        {leanList.length === 0 ? (
-          <p>No hay Lean Canvas guardados aún.</p>
-        ) : (
-          <>
-            <table className="report-table">
-              <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>% General</th>
-                  <th>Problema</th>
-                  <th>Solución</th>
-                  <th>Métricas</th>
-                  <th>UVP</th>
-                  <th>Canales</th>
-                  <th>Segmentos</th>
-                  <th>Costos</th>
-                  <th>Ingresos</th>
-                </tr>
-              </thead>
-              <tbody>
-                {leanList.map((item) => {
-                  const { scores, percent } = computeLeanScore(item);
-                  return (
-                    <tr key={item._id}>
-                      <td>{item.createdAt ? new Date(item.createdAt).toLocaleString() : "-"}</td>
-                      <td>{percent}%</td>
-                      <td>{scores[0]}</td>
-                      <td>{scores[1]}</td>
-                      <td>{scores[2]}</td>
-                      <td>{scores[3]}</td>
-                      <td>{scores[4]}</td>
-                      <td>{scores[5]}</td>
-                      <td>{scores[6]}</td>
-                      <td>{scores[7]}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        <h3>Selecciona un Lean Canvas</h3>
+        <select
+          value={selectedLean}
+          onChange={(e) => setSelectedLean(e.target.value)}
+          className="report-select"
+        >
+          <option value="">-- Elegir --</option>
+          {leanList.map((item) => (
+            <option key={item._id} value={item._id}>
+              {item.title || `Lean Canvas ${item._id.slice(-4)}`}
+            </option>
+          ))}
+        </select>
 
-            {/* Gráfico barras Lean */}
-            <h4 className="grafico-title">Desempeño Lean Canvas</h4>
+        {currentLean && (
+          <>
+            <h4>{currentLean.title}</h4>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={leanChartData}>
+              <BarChart data={getLeanAnalysis(currentLean)}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="fecha" />
+                <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="porcentaje" fill="#3b82f6" />
+                <Bar dataKey="value" fill="#3b82f6" />
               </BarChart>
             </ResponsiveContainer>
+            <p className="report-conclusion">{leanConclusion}</p>
           </>
         )}
       </section>
 
-      {/* Porter */}
+      {/* Selector Porter */}
       <section className="report-section">
-        <h3>5 Fuerzas de Porter</h3>
-        {porterList.length === 0 ? (
-          <p>No hay 5 Fuerzas guardadas aún.</p>
-        ) : (
-          <>
-            <table className="report-table">
-              <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>% General</th>
-                  <th>Nuevos</th>
-                  <th>Proveedores</th>
-                  <th>Clientes</th>
-                  <th>Sustitutos</th>
-                  <th>Rivalidad</th>
-                </tr>
-              </thead>
-              <tbody>
-                {porterList.map((item) => {
-                  const { scores, percent } = computePorterScore(item);
-                  return (
-                    <tr key={item._id}>
-                      <td>{item.createdAt ? new Date(item.createdAt).toLocaleString() : "-"}</td>
-                      <td>{percent}%</td>
-                      <td>{scores[0]}</td>
-                      <td>{scores[1]}</td>
-                      <td>{scores[2]}</td>
-                      <td>{scores[3]}</td>
-                      <td>{scores[4]}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        <h3>Selecciona un Análisis de 5 Fuerzas de Porter</h3>
+        <select
+          value={selectedPorter}
+          onChange={(e) => setSelectedPorter(e.target.value)}
+          className="report-select"
+        >
+          <option value="">-- Elegir --</option>
+          {porterList.map((item) => (
+            <option key={item._id} value={item._id}>
+              {item.title || `Porter ${item._id.slice(-4)}`}
+            </option>
+          ))}
+        </select>
 
-            {/* Gráfico barras Porter */}
-            <h4 className="grafico-title">Desempeño 5 Fuerzas de Porter</h4>
+        {currentPorter && (
+          <>
+            <h4>{currentPorter.title}</h4>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={porterChartData}>
+              <BarChart data={getPorterAnalysis(currentPorter)}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="fecha" />
+                <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="porcentaje" fill="#10b981" />
+                <Bar dataKey="value" fill="#10b981" />
               </BarChart>
             </ResponsiveContainer>
+            <p className="report-conclusion">{porterConclusion}</p>
           </>
         )}
       </section>
 
-      {/* Conclusión automática */}
-      <div className="report-legend">
-        <strong>Conclusión:</strong>
-        <p>
-          En promedio, los Lean Canvas registrados tienen un <b>{promedioLean.toFixed(1)}%</b> de
-          completitud. Las 5 Fuerzas de Porter muestran un <b>{promedioPorter.toFixed(1)}%</b>.
-        </p>
-        <p>
-          Esto permite visualizar rápidamente qué modelo necesita más detalle y cómo se comportan
-          tus proyectos desde la perspectiva de <b>Producción y Logística</b>.
-        </p>
-      </div>
+      <p className="report-legend">
+        Selecciona un elemento del historial para ver su análisis adaptado a ITIL. El puntaje
+        (0–5) representa la completitud en cada sección; las conclusiones interpretan ese
+        puntaje desde la perspectiva ITIL.
+      </p>
     </div>
   );
 }

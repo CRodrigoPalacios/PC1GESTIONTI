@@ -101,3 +101,30 @@
   font-size: 0.95rem;
   color: #5c4400;
 }
+
+/* Reportes.css */
+
+.history-selection {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.select-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.select-group select {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.conclusiones {
+  margin-top: 1rem;
+  background-color: #e3f2fd; /* azul claro para destacar */
+  padding: 1rem;
+  border-radius: 6px;
+}
+
